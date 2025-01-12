@@ -164,10 +164,51 @@ func Delete() (int, error) {
 	return 0, fmt.Errorf("task with id %d not found", id)
 }
 
-func MarkInProgress() string {
-	id := os.Args[2]
-	out := fmt.Sprint(id)
-	return out
+func MarkInProgress() (int, error) {
+	id_str := os.Args[2]
+
+	id, err := strconv.Atoi(id_str)
+	if err != nil {
+		return 0, err
+	}
+
+	file, err := ReadFile("tasks.json")
+	if err != nil {
+		return 0, err
+	}
+	defer file.Close()
+
+	stat, err := file.Stat()
+	if err != nil {
+		return 0, err
+	}
+	if stat.Size() == 0 {
+		return 0, fmt.Errorf("no tasks to mark in progress")
+	}
+
+	var tasks data.Tasks
+	err = json.NewDecoder(file).Decode(&tasks)
+	if err != nil {
+		return 0, fmt.Errorf("error decoding tasks: %w", err)
+	}
+
+	for i, task := range tasks.Tasks {
+		if task.ID == id {
+			tasks.Tasks[i].Status = "in-progress"
+			tasks.Tasks[i].UpdatedAt = time.Now()
+			break
+		}
+	}
+	err = file.Truncate(0)
+	if err != nil {
+		return 0, err
+	}
+	file.Seek(0, 0)
+	err = json.NewEncoder(file).Encode(tasks)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
 }
 
 func MarkDone() string {
