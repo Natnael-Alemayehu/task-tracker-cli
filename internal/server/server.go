@@ -52,6 +52,10 @@ func Add() (int, error) {
 
 	tasks.Tasks = append(tasks.Tasks, newTask)
 
+	err = file.Truncate(0)
+	if err != nil {
+		return 0, err
+	}
 	file.Seek(0, 0)
 	err = json.NewEncoder(file).Encode(tasks)
 	if err != nil {
@@ -99,6 +103,10 @@ func Update() (int, error) {
 
 	}
 
+	err = file.Truncate(0)
+	if err != nil {
+		return 0, err
+	}
 	file.Seek(0, 0)
 	err = json.NewEncoder(file).Encode(tasks)
 	if err != nil {
