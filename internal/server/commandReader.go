@@ -39,7 +39,12 @@ func ReadCommand() string {
 		output := fmt.Sprintf("Task marked in progress successfully (ID: %d)\n", i)
 		return output
 	case "mark-done":
-		return MarkDone()
+		i, err := MarkDone()
+		if err != nil {
+			return err.Error()
+		}
+		output := fmt.Sprintf("Task marked Done successfully (ID: %d)\n", i)
+		return output
 	case "list":
 		return List()
 	case "list-in-progress":

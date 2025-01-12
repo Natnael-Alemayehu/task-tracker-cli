@@ -1,18 +1,1 @@
-{
-  "tasks": [
-    {
-      "id": 1,
-      "description": "First task",
-      "status": "in-progress",
-      "createdAt": "2025-01-12T12:42:51.974343967+03:00",
-      "updatedAt": "2025-01-12T15:41:00.655405489+03:00"
-    },
-    {
-      "id": 2,
-      "description": "Second task",
-      "status": "todo",
-      "createdAt": "2025-01-12T12:42:54.537727031+03:00",
-      "updatedAt": "2025-01-12T12:42:54.537727142+03:00"
-    }
-  ]
-}
+{"tasks":[{"id":1,"description":"First task","status":"done","createdAt":"2025-01-12T12:42:51.974343967+03:00","updatedAt":"2025-01-12T15:42:52.962200079+03:00"},{"id":2,"description":"Second task","status":"todo","createdAt":"2025-01-12T12:42:54.537727031+03:00","updatedAt":"2025-01-12T12:42:54.537727142+03:00"}]}
