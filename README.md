@@ -73,3 +73,6 @@ To run the tests, use the following command:
 ```sh
 go test ./internal/server
 ```
+
+Project idea from 
+https://roadmap.sh/projects/task-tracker
