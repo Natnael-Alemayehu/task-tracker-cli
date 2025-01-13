@@ -276,8 +276,8 @@ func MarkDone() (int, error) {
 	return id, nil
 }
 
-func List() ([]byte, error) {
-	file, err := os.Open("tasks.json")
+func List(name string) ([]byte, error) {
+	file, err := ReadFile(name)
 	if err != nil {
 		return nil, err
 	}
@@ -286,7 +286,9 @@ func List() ([]byte, error) {
 	var tasks data.Tasks
 
 	err = json.NewDecoder(file).Decode(&tasks)
-	if err != nil {
+	if err.Error() == "EOF" {
+		return nil, fmt.Errorf("no tasks to list")
+	} else if err != nil {
 		return nil, err
 	}
 
@@ -299,7 +301,7 @@ func List() ([]byte, error) {
 }
 
 func ListInProgress() ([]byte, error) {
-	file, err := os.Open("tasks.json")
+	file, err := ReadFile("tasks.json")
 	if err != nil {
 		return nil, err
 	}
@@ -328,7 +330,7 @@ func ListInProgress() ([]byte, error) {
 }
 
 func ListDone() ([]byte, error) {
-	file, err := os.Open("tasks.json")
+	file, err := ReadFile("tasks.json")
 	if err != nil {
 		return nil, err
 	}
@@ -357,7 +359,7 @@ func ListDone() ([]byte, error) {
 }
 
 func ListTodo() ([]byte, error) {
-	file, err := os.Open("tasks.json")
+	file, err := ReadFile("tasks.json")
 	if err != nil {
 		return nil, err
 	}

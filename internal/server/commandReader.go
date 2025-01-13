@@ -42,7 +42,7 @@ func ReadCommand() string {
 		output := fmt.Sprintf("Task marked Done successfully (ID: %d)\n", i)
 		return output
 	case "list":
-		tasks, err := List()
+		tasks, err := List("tasks.json")
 		if err != nil {
 			return err.Error()
 		}

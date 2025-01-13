@@ -7,6 +7,6 @@ import (
 )
 
 func main() {
-	ans := server.ReadCommand()
-	fmt.Printf("%v", ans)
+	start := server.ReadCommand()
+	fmt.Printf("%v", start)
 }
