@@ -8,5 +8,5 @@ import (
 
 func main() {
 	ans := server.ReadCommand()
-	fmt.Printf("The ans: %v", ans)
+	fmt.Printf("%v", ans)
 }

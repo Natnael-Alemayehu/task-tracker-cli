@@ -1,11 +1,7 @@
 package server
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
-
-	"github.com/natnael-alemayehu/task-tracker-cli/internal/data"
 )
 
 func ReadCommand() string {
@@ -46,41 +42,31 @@ func ReadCommand() string {
 		output := fmt.Sprintf("Task marked Done successfully (ID: %d)\n", i)
 		return output
 	case "list":
-		return List()
+		tasks, err := List()
+		if err != nil {
+			return err.Error()
+		}
+		output := fmt.Sprintf("\n%s\n", tasks)
+		return output
 	case "list-in-progress":
-		return ListInProgress()
+		tasks, err := ListInProgress()
+		if err != nil {
+			return err.Error()
+		}
+		return fmt.Sprintf("\n%s\n", tasks)
 	case "list-done":
-		return ListDone()
+		tasks, err := ListDone()
+		if err != nil {
+			return err.Error()
+		}
+		return fmt.Sprintf("\n%s\n", tasks)
+	case "list-todo":
+		tasks, err := ListTodo()
+		if err != nil {
+			return err.Error()
+		}
+		return fmt.Sprintf("\n%s\n", tasks)
 	default:
 		return "Invalid command"
 	}
-}
-
-func ReadFile(fileName string) (*os.File, error) {
-	data, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0644)
-	if os.IsNotExist(err) {
-		_, err := os.Create(fileName)
-		if err != nil {
-			return nil, err
-		}
-	} else if err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
-func ListTaks() error {
-	file, err := os.Open("tasks.json")
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	var tasks data.Tasks
-
-	err = json.NewDecoder(file).Decode(&tasks)
-	if err != nil {
-		return err
-	}
-	return nil
 }

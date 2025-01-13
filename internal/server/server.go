@@ -12,7 +12,25 @@ import (
 
 func CommandReader() string {
 	word := os.Args[1]
+	if word == "list" && len(os.Args) > 2 {
+		word = os.Args[1] + "-" + os.Args[2]
+		fmt.Println(word)
+		return word
+	}
 	return word
+}
+
+func ReadFile(fileName string) (*os.File, error) {
+	data, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0644)
+	if os.IsNotExist(err) {
+		_, err := os.Create(fileName)
+		if err != nil {
+			return nil, err
+		}
+	} else if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
 func Add() (int, error) {
@@ -258,18 +276,111 @@ func MarkDone() (int, error) {
 	return id, nil
 }
 
-func List() string {
-	return "List"
+func List() ([]byte, error) {
+	file, err := os.Open("tasks.json")
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var tasks data.Tasks
+
+	err = json.NewDecoder(file).Decode(&tasks)
+	if err != nil {
+		return nil, err
+	}
+
+	t, err := json.MarshalIndent(tasks, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+
+	return t, nil
 }
 
-func ListInProgress() string {
-	return "List in progress"
+func ListInProgress() ([]byte, error) {
+	file, err := os.Open("tasks.json")
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var tasks data.Tasks
+
+	err = json.NewDecoder(file).Decode(&tasks)
+	if err != nil {
+		return nil, err
+	}
+
+	var inProgressTasks data.Tasks
+	for _, task := range tasks.Tasks {
+		if task.Status == "in-progress" {
+			inProgressTasks.Tasks = append(inProgressTasks.Tasks, task)
+		}
+	}
+
+	t, err := json.MarshalIndent(inProgressTasks, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+
+	return t, nil
 }
 
-func ListDone() string {
-	return "List done"
+func ListDone() ([]byte, error) {
+	file, err := os.Open("tasks.json")
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var tasks data.Tasks
+
+	err = json.NewDecoder(file).Decode(&tasks)
+	if err != nil {
+		return nil, err
+	}
+
+	var inProgressTasks data.Tasks
+	for _, task := range tasks.Tasks {
+		if task.Status == "done" {
+			inProgressTasks.Tasks = append(inProgressTasks.Tasks, task)
+		}
+	}
+
+	t, err := json.MarshalIndent(inProgressTasks, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+
+	return t, nil
 }
 
-func ListTodo() string {
-	return "List todo"
+func ListTodo() ([]byte, error) {
+	file, err := os.Open("tasks.json")
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var tasks data.Tasks
+
+	err = json.NewDecoder(file).Decode(&tasks)
+	if err != nil {
+		return nil, err
+	}
+
+	var inProgressTasks data.Tasks
+	for _, task := range tasks.Tasks {
+		if task.Status == "todo" {
+			inProgressTasks.Tasks = append(inProgressTasks.Tasks, task)
+		}
+	}
+
+	t, err := json.MarshalIndent(inProgressTasks, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+
+	return t, nil
 }
